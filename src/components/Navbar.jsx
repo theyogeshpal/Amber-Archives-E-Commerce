@@ -8,8 +8,12 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import InfoIcon from '@mui/icons-material/Info';
 import CallIcon from '@mui/icons-material/Call';
 import PersonIcon from '@mui/icons-material/Person';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
+    const { isLoggedIn } = useAuth();
+    const { cart } = useCart();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -19,13 +23,14 @@ const Navbar = () => {
         { name: 'Products', path: '/products' },
         { name: 'About Us', path: '/about' },
         { name: 'Contact Us', path: '/contact' },
+        ...(isLoggedIn ? [{ name: 'Profile', path: '/profile' }] : []),
     ];
 
     const bottomLinks = [
         { name: 'Home', path: '/', icon: <HomeIcon /> },
         { name: 'Shop', path: '/products', icon: <StorefrontIcon /> },
         { name: 'Cart', path: '/cart', icon: <ShoppingCartIcon /> },
-        { name: 'About', path: '/about', icon: <InfoIcon /> },
+        ...(isLoggedIn ? [{ name: 'Profile', path: '/profile', icon: <PersonIcon /> }] : [{ name: 'Login', path: '/login', icon: <PersonIcon /> }]),
     ];
 
     return (
@@ -55,16 +60,26 @@ const Navbar = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
-                            <span className="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                            <span className="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{cart.length}</span>
                         </Link>
 
-                        <div className="hidden md:flex space-x-2">
-                            <Link to="/login" className="px-5 py-2 text-gray-900 font-semibold hover:text-yellow-600 transition duration-300">Login</Link>
-                            <Link to="/register" className="px-5 py-2 bg-yellow-400 text-gray-900 font-bold rounded-full hover:bg-yellow-500 transition duration-300 shadow-md hover:shadow-lg">Start free</Link>
-                        </div>
+                        {!isLoggedIn && (
+                            <div className="hidden md:flex space-x-2">
+                                <Link to="/login" className="px-5 py-2 text-gray-900 font-semibold hover:text-yellow-600 transition duration-300">Login</Link>
+                                <Link to="/register" className="px-5 py-2 bg-yellow-400 text-gray-900 font-bold rounded-full hover:bg-yellow-500 transition duration-300 shadow-md hover:shadow-lg">Start free</Link>
+                            </div>
+                        )}
+
+                        {isLoggedIn && (
+                            <Link to="/profile" className="hidden md:flex items-center gap-2 group">
+                                <div className="w-10 h-10 rounded-full bg-yellow-400 flex items-center justify-center text-gray-900 font-bold border-2 border-transparent group-hover:border-yellow-400 transition-all">
+                                    <PersonIcon />
+                                </div>
+                            </Link>
+                        )}
 
                         {/* Mobile Profile Icon instead of Menu */}
-                        <Link to="/login" className="md:hidden text-gray-700 hover:text-yellow-500">
+                        <Link to={isLoggedIn ? "/profile" : "/login"} className="md:hidden text-gray-700 hover:text-yellow-500">
                             <PersonIcon />
                         </Link>
                     </div>

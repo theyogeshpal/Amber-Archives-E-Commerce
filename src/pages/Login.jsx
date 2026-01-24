@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
-import { Smartphone, LockOpen, ArrowForward, ChevronLeft } from '@mui/icons-material';
+import { useNavigate, Link } from 'react-router-dom';
+import { Email, Lock, ArrowForward, Visibility, VisibilityOff, WarningAmber } from '@mui/icons-material';
+import { useAuth } from '../context/AuthContext';
 import loginBg from '../assets/login-bg.png';
 
 const Login = () => {
-    const [step, setStep] = useState(1); // 1: Mobile No, 2: OTP
-    const [mobile, setMobile] = useState('');
-    const [otp, setOtp] = useState('');
+    const navigate = useNavigate();
+    const { login } = useAuth();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
-    const handleMobileSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (mobile) {
-            setStep(2);
-            // Simulate sending OTP
-            console.log('Sending OTP to', mobile);
+        setError('');
+
+        // Admin credentials check
+        if (email === 'admin@gmail.com' && password === 'admin@123') {
+            login({ name: 'Admin User', email: email });
+            navigate('/profile');
+        } else {
+            setError('Invalid email or password. Please try again.');
         }
-    };
-
-    const handleOtpSubmit = (e) => {
-        e.preventDefault();
-        console.log('Verifying OTP', otp);
-        // Add verification logic here
     };
 
     return (
@@ -34,94 +37,89 @@ const Login = () => {
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-black/40 to-transparent"></div>
             </div>
 
-            {/* Decorative Blobs */}
-            <div className="absolute top-1/4 -left-20 w-96 h-96 bg-amber-500/20 rounded-full blur-[120px] animate-blob"></div>
-            <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-charcoal-500/20 rounded-full blur-[120px] animate-blob animation-delay-2000"></div>
-
             {/* Login Card */}
-            <div className="relative z-10 w-full max-w-[440px] px-6 animate-fade-in-up">
-                <div className="bg-white/20 backdrop-blur-2xl p-10 rounded-[2.5rem] border border-white/20 shadow-[0_32px_120px_-15px_rgba(0,0,0,0.5)]">
+            <div className="relative z-10 w-full max-w-[460px] px-6 animate-fade-in-up">
+                <div className="bg-white/10 backdrop-blur-3xl p-10 rounded-[3rem] border border-white/20 shadow-[0_32px_120px_-15px_rgba(0,0,0,0.5)]">
                     <div className="text-center mb-10">
-                        <h2 className="text-4xl font-black text-white mb-2 tracking-tight">Welcome Back</h2>
-                        <div className="w-12 h-1.5 bg-amber-500 mx-auto rounded-full mb-4"></div>
-                        <p className="text-amber-100/70 font-medium">Access your curated collection</p>
+                        <div className="inline-block p-4 bg-yellow-400 rounded-3xl mb-6 shadow-xl shadow-yellow-400/20 transform -rotate-6">
+                            <Lock className="text-gray-900" sx={{ fontSize: 32 }} />
+                        </div>
+                        <h2 className="text-4xl font-black text-white mb-2 tracking-tight">Vault Access</h2>
+                        <p className="text-white/60 font-medium">Enter your credentials to unlock</p>
                     </div>
 
-                    {step === 1 ? (
-                        <form onSubmit={handleMobileSubmit} className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-amber-500/80 uppercase tracking-widest ml-1">Mobile Number</label>
-                                <div className="group relative">
-                                    <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-amber-500 transition-colors" />
-                                    <input
-                                        type="tel"
-                                        placeholder="Enter your mobile"
-                                        value={mobile}
-                                        onChange={(e) => setMobile(e.target.value)}
-                                        required
-                                        className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:bg-white/10 transition-all duration-300"
-                                    />
-                                </div>
-                            </div>
-                            <button
-                                type="submit"
-                                className="group w-full py-4 bg-amber-500 hover:bg-amber-400 text-black font-black rounded-2xl transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-3 shadow-lg shadow-amber-500/20"
-                            >
-                                Send OTP
-                                <ArrowForward className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </button>
-                        </form>
-                    ) : (
-                        <form onSubmit={handleOtpSubmit} className="space-y-6">
-                            <div className="space-y-2">
-                                <div className="flex justify-between items-center mb-1">
-                                    <label className="text-xs font-bold text-amber-500/80 uppercase tracking-widest ml-1">Verification Code</label>
-                                    <span className="text-[10px] text-white/40 italic">Sent to {mobile}</span>
-                                </div>
-                                <div className="group relative">
-                                    <LockOpen className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-amber-500 transition-colors" />
-                                    <input
-                                        type="text"
-                                        placeholder="Enter 6-digit OTP"
-                                        value={otp}
-                                        onChange={(e) => setOtp(e.target.value)}
-                                        required
-                                        className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:bg-white/10 transition-all duration-300 tracking-[0.5em] text-center"
-                                    />
-                                </div>
-                            </div>
-                            <div className="space-y-3">
-                                <button
-                                    type="submit"
-                                    className="group w-full py-4 bg-amber-600 hover:bg-amber-500 text-white font-black rounded-2xl transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-3 shadow-lg shadow-amber-600/20"
-                                >
-                                    Verify & Login
-                                    <ArrowForward className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => setStep(1)}
-                                    className="w-full py-4 bg-transparent border border-white/20 text-white/70 font-bold rounded-2xl hover:bg-white/5 hover:text-white transition-all duration-300 flex items-center justify-center gap-2"
-                                >
-                                    <ChevronLeft className="w-5 h-5" />
-                                    Back to mobile
-                                </button>
-                            </div>
-                        </form>
+                    {error && (
+                        <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center gap-3 text-red-400 animate-shake">
+                            <WarningAmber fontSize="small" />
+                            <p className="text-xs font-bold leading-tight">{error}</p>
+                        </div>
                     )}
 
-                    <div className="mt-8 text-center">
-                        <p className="text-white/40 text-sm">
-                            New to Amber Archives? <a href="/register" className="text-amber-500 font-bold hover:underline">Join Us</a>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-yellow-400 uppercase tracking-[0.2em] ml-1">Email Identifier</label>
+                            <div className="group relative">
+                                <Email className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-yellow-400 transition-colors" />
+                                <input
+                                    type="email"
+                                    placeholder="your@email.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    className="w-full pl-12 pr-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:bg-white/10 transition-all duration-300"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black text-yellow-400 uppercase tracking-[0.2em] ml-1">Secret Password</label>
+                            <div className="group relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-yellow-400 transition-colors" />
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    className="w-full pl-12 pr-12 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:bg-white/10 transition-all duration-300"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                                >
+                                    {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className="group w-full py-4 bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-black rounded-2xl transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-3 shadow-2xl shadow-yellow-400/20 mt-10"
+                        >
+                            Authorize Entry
+                            <ArrowForward className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                    </form>
+
+                    <div className="mt-12 text-center space-y-4">
+                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest">
+                            New to the archives? <Link to="/register" className="text-yellow-400 hover:underline">Request access</Link>
                         </p>
+                        {/* <div className="pt-4 border-t border-white/5">
+                            <p className="text-[10px] text-white/20 font-medium leading-relaxed">
+                                Default Credentials for Verification:<br />
+                                <span className="text-yellow-400/40">admin@gmail.com / admin@123</span>
+                            </p>
+                        </div> */}
                     </div>
                 </div>
             </div>
 
             {/* Bottom Credits */}
-            <div className="absolute bottom-8 text-center z-10 w-full">
-                <p className="text-white/20 text-xs font-medium tracking-[0.2em] uppercase">
-                    Timeless Heritage &bull; Modern Luxury
+            <div className="absolute bottom-8 text-center mb-5 z-10 w-full">
+                <p className="text-white/10 text-[10px] font-bold tracking-[0.4em] uppercase">
+                    Timeless Heritage &bull; Secure Protocol
                 </p>
             </div>
         </div>

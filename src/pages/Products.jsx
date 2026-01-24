@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import StarIcon from '@mui/icons-material/Star';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useWishlist } from '../context/WishlistContext';
+import { useCart } from '../context/CartContext';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 
-const Products = () => {
-    const productsData = [
-        { id: 1, name: 'Premium Wireless Headphones', category: 'Electronics', price: 299, rating: 4.8, reviews: 124, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80', isNew: true },
-        { id: 2, name: 'Minimalist Smart Watch', category: 'Gadgets', price: 199, rating: 4.5, reviews: 89, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80', isNew: false },
-        { id: 3, name: 'Performance Running Shoes', category: 'Fashion', price: 120, rating: 4.7, reviews: 256, image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&q=80', isNew: true },
-        { id: 4, name: 'Urban Explorer Backpack', category: 'Accessories', price: 85, rating: 4.6, reviews: 45, image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&q=80', isNew: false },
-        { id: 5, name: 'Professional DSLR Camera', category: 'Electronics', price: 899, rating: 4.9, reviews: 67, image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&q=80', isNew: false },
-        { id: 6, name: 'Leather Weekend Bag', category: 'Accessories', price: 150, rating: 4.4, reviews: 34, image: 'https://images.unsplash.com/photo-1547949003-9792a18a2601?w=500&q=80', isNew: true },
-        { id: 7, name: 'Cotton Summer Shirt', category: 'Fashion', price: 45, rating: 4.2, reviews: 112, image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80', isNew: false },
-        { id: 8, name: 'Portable Bluetooth Speaker', category: 'Electronics', price: 79, rating: 4.6, reviews: 198, image: 'https://cdn.moglix.com/p/ETDC0l8QWI1e7-xxlarge.jpg', isNew: true },
-        { id: 9, name: 'Designer Sunglasses', category: 'Accessories', price: 135, rating: 4.5, reviews: 56, image: 'https://u-mercari-images.mercdn.net/photos/m85257037986_1.jpg', isNew: false },
-        { id: 10, name: 'Organic Face Cream', category: 'Beauty', price: 35, rating: 4.8, reviews: 87, image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&q=80', isNew: true },
-        { id: 11, name: 'Modern Desk Lamp', category: 'Home', price: 65, rating: 4.3, reviews: 29, image: 'https://images.unsplash.com/photo-1534073828943-f801091bb18c?w=500&q=80', isNew: false },
-        { id: 12, name: 'Yoga Mat Premium', category: 'Sports', price: 55, rating: 4.7, reviews: 143, image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&q=80', isNew: false },
-    ];
+import { productsData } from '../data/products';
 
+const Products = () => {
+    const location = useLocation();
     const [products, setProducts] = useState(productsData);
     const [searchTerm, setSearchTerm] = useState('');
     const [category, setCategory] = useState('All');
+
+    useEffect(() => {
+        if (location.state?.selectedCategory) {
+            setCategory(location.state.selectedCategory);
+        }
+    }, [location.state]);
     const [sortBy, setSortBy] = useState('Featured');
     const [priceRange, setPriceRange] = useState(1000);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [wishlist, setWishlist] = useState([]);
+    const { wishlist, toggleWishlist } = useWishlist();
+    const { addToCart: globalAddToCart } = useCart();
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     const categories = ['All', ...new Set(productsData.map(p => p.category))];
 
@@ -51,14 +51,21 @@ const Products = () => {
         setProducts(filtered);
     }, [searchTerm, category, sortBy, priceRange]);
 
-    const toggleWishlist = (id) => {
-        setWishlist(prev => prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]);
+    // Removed local wishlist toggle logic
+
+    const addToCart = (e, product) => {
+        e.preventDefault();
+        e.stopPropagation();
+        globalAddToCart(product);
+        setToastMessage(`${product.name} added to cart!`);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
     };
 
     return (
         <div className="bg-gray-50 min-h-screen">
             {/* Page Header */}
-            <div className="bg-white border-b border-gray-100 py-12 md:py-20">
+            <div className="bg-white border-b border-gray-100 py-12 md:py-10">
                 <div className="container mx-auto px-6 text-center">
                     <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 animate-fade-in-up">
                         Amber <span className="text-yellow-500">Archives</span> Collections
@@ -96,7 +103,7 @@ const Products = () => {
 
                             {/* Price Range */}
                             <div className="mb-8">
-                                <label className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 block">Max Price: ${priceRange}</label>
+                                <label className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 block">Max Price: ₹{priceRange}</label>
                                 <input
                                     type="range"
                                     min="0"
@@ -107,8 +114,8 @@ const Products = () => {
                                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-yellow-400"
                                 />
                                 <div className="flex justify-between text-xs text-gray-400 mt-2">
-                                    <span>$0</span>
-                                    <span>$1000+</span>
+                                    <span>₹0</span>
+                                    <span>₹1000+</span>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +173,7 @@ const Products = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-xs font-bold text-gray-400 uppercase mb-3 block">Max Price: ${priceRange}</label>
+                                    <label className="text-xs font-bold text-gray-400 uppercase mb-3 block">Max Price: ₹{priceRange}</label>
                                     <input
                                         type="range"
                                         min="0"
@@ -211,9 +218,17 @@ const Products = () => {
 
                                         {/* Mobile Add to Cart Reveal */}
                                         <div className="absolute bottom-4 left-4 right-4 transform translate-y-12 group-hover:translate-y-0 transition-transform duration-300 hidden md:block">
-                                            <button className="w-full bg-yellow-400 text-gray-900 font-bold py-3 rounded-2xl shadow-lg flex items-center justify-center gap-2 hover:bg-yellow-300 active:scale-95 transition-all">
-                                                <ShoppingCartIcon fontSize="small" /> Add to Cart
-                                            </button>
+                                            <div className="flex gap-2">
+                                                <Link to={`/product/${product.id}`} className="flex-1 bg-white text-gray-900 font-bold py-3 rounded-2xl shadow-lg flex items-center justify-center border border-gray-100 hover:bg-gray-50 active:scale-95 transition-all text-sm">
+                                                    Details
+                                                </Link>
+                                                <button
+                                                    onClick={(e) => addToCart(e, product)}
+                                                    className="flex-1 bg-yellow-400 text-gray-900 font-bold py-3 rounded-2xl shadow-lg flex items-center justify-center gap-2 hover:bg-yellow-300 active:scale-95 transition-all text-sm"
+                                                >
+                                                    <ShoppingCartIcon fontSize="small" /> Add
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -226,12 +241,17 @@ const Products = () => {
                                             <span className="text-xs font-bold text-gray-900">{product.rating}</span>
                                             <span className="text-[10px] text-gray-400">({product.reviews})</span>
                                         </div>
-                                        <h3 className="font-bold text-gray-900 text-sm md:text-lg mb-2 leading-tight flex-1 line-clamp-2">{product.name}</h3>
+                                        <Link to={`/product/${product.id}`}>
+                                            <h3 className="font-bold text-gray-900 text-sm md:text-lg mb-2 leading-tight flex-1 line-clamp-2 hover:text-yellow-500 transition-colors">{product.name}</h3>
+                                        </Link>
                                         <div className="flex items-center justify-between mt-auto">
-                                            <span className="text-lg md:text-2xl font-black text-gray-900">${product.price}</span>
+                                            <span className="text-lg md:text-2xl font-black text-gray-900">₹{product.price}</span>
 
                                             {/* Mobile Cart Icon */}
-                                            <button className="md:hidden p-2 bg-yellow-400 text-gray-900 rounded-xl shadow-md active:scale-90">
+                                            <button
+                                                onClick={(e) => addToCart(e, product)}
+                                                className="md:hidden p-2 bg-yellow-400 text-gray-900 rounded-xl shadow-md active:scale-90"
+                                            >
                                                 <ShoppingCartIcon fontSize="small" />
                                             </button>
                                         </div>
@@ -254,6 +274,19 @@ const Products = () => {
                                 </button>
                             </div>
                         )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Custom Toast Notification */}
+            <div className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 transform ${showToast ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
+                <div className="bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 min-w-[300px]">
+                    <div className="bg-yellow-400 p-2 rounded-lg text-gray-900">
+                        <ShoppingCartIcon fontSize="small" />
+                    </div>
+                    <div>
+                        <p className="font-bold text-sm">Added to Archive</p>
+                        <p className="text-xs text-gray-400">{toastMessage}</p>
                     </div>
                 </div>
             </div>

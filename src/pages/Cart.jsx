@@ -5,7 +5,7 @@ import emptyCartImg from '../assets/empty-cart.png';
 
 const Cart = () => {
     return (
-        <div className="bg-white min-h-screen pt-20">
+        <div className="bg-white min-h-screen pt-10">
             <div className="max-w-7xl mx-auto px-4 py-16">
                 <div className="text-center mb-16 animate-fade-in-up">
                     <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">Your Archive</h1>

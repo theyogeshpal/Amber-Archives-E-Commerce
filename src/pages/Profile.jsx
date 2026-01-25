@@ -57,9 +57,9 @@ const Profile = () => {
                         </div>
 
                         <div className="text-center md:text-left space-y-4">
-                            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-yellow-400/10 text-yellow-700 rounded-full text-xs font-bold uppercase tracking-widest leading-none">
+                            {/* <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-yellow-400/10 text-yellow-700 rounded-full text-xs font-bold uppercase tracking-widest leading-none">
                                 <EmojiEvents sx={{ fontSize: 16 }} /> Premium Voyager
-                            </div>
+                            </div> */}
                             <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight">{user.name}</h1>
                             <div className="flex flex-col sm:flex-row items-center gap-4 text-gray-500 font-medium">
                                 <p>{user.email}</p>
@@ -104,7 +104,7 @@ const Profile = () => {
                     <div className="lg:col-span-3 space-y-12">
                         {/* Wishlist Section */}
                         <div className="space-y-8">
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between md:flex-row flex-col">
                                 <h2 className="text-3xl font-black text-gray-900 tracking-tight flex items-center gap-3">
                                     <Favorite className="text-pink-500" /> My Archive Wishlist
                                 </h2>

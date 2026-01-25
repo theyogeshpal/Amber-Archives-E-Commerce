@@ -106,18 +106,13 @@ const Login = () => {
                         <p className="text-white/40 text-xs font-bold uppercase tracking-widest">
                             New to the archives? <Link to="/register" className="text-yellow-400 hover:underline">Request access</Link>
                         </p>
-                        {/* <div className="pt-4 border-t border-white/5">
-                            <p className="text-[10px] text-white/20 font-medium leading-relaxed">
-                                Default Credentials for Verification:<br />
-                                <span className="text-yellow-400/40">admin@gmail.com / admin@123</span>
-                            </p>
-                        </div> */}
+
                     </div>
                 </div>
             </div>
 
             {/* Bottom Credits */}
-            <div className="absolute bottom-8 text-center mb-5 z-10 w-full">
+            <div className="absolute bottom-8 text-center mb-1 z-10 w-full">
                 <p className="text-white/10 text-[10px] font-bold tracking-[0.4em] uppercase">
                     Timeless Heritage &bull; Secure Protocol
                 </p>

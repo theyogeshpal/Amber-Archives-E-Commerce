@@ -13,7 +13,11 @@ const Categories = () => {
     return (
         <section className="py-20 bg-white">
             <div className="container mx-auto px-6">
-                <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">Shop by Category</h2>
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tighter uppercase">Shop by <span className="text-yellow-500">Category</span></h2>
+                    <p className="text-gray-600 max-w-xl mx-auto text-lg uppercase">Indulge in our carefully curated selections across various lifestyle departments.</p>
+                    <div className="w-24 h-1.5 bg-yellow-400 mx-auto mt-6 rounded-full"></div>
+                </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                     {categories.map((cat) => (
                         <Link to="/products" state={{ selectedCategory: cat.name }} key={cat.id} className="group cursor-pointer">

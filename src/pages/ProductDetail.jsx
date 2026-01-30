@@ -52,11 +52,11 @@ const ProductDetail = () => {
                 <div className="grid lg:grid-cols-12 gap-12 xl:gap-20 items-start">
                     {/* Left: Image Section */}
                     <div className="lg:col-span-5 space-y-6">
-                        <div className="aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-[40px] overflow-hidden bg-gray-50 border border-gray-100 group relative max-h-[510px] mx-auto lg:mx-0">
+                        <div className="aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-[40px] overflow-hidden bg-white border border-gray-100 group relative max-h-[510px] mx-auto lg:mx-0 p-8">
                             <img
                                 src={selectedImage}
-                                alt={product.name}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                alt={product.title || product.name}
+                                className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
                             />
                             {product.isNew && (
                                 <span className="absolute top-6 left-6 bg-yellow-400 text-gray-900 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">New Arrival</span>
@@ -71,7 +71,7 @@ const ProductDetail = () => {
                                     onClick={() => setSelectedImage(img)}
                                     className={`aspect-square rounded-2xl overflow-hidden border-2 transition-all ${selectedImage === img && idx === 0 ? 'border-yellow-400 shadow-md' : 'border-transparent hover:border-gray-200'}`}
                                 >
-                                    <img src={img} alt="" className="w-full h-full object-cover" />
+                                    <img src={img} alt="" className="w-full h-full object-contain p-2" />
                                 </button>
                             ))}
                         </div>
@@ -83,14 +83,14 @@ const ProductDetail = () => {
                             <div className="flex items-center gap-2 text-yellow-500 mb-4">
                                 <div className="flex">
                                     {[...Array(5)].map((_, i) => (
-                                        <StarIcon key={i} sx={{ fontSize: 20 }} className={i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-200'} />
+                                        <StarIcon key={i} sx={{ fontSize: 20 }} className={i < Math.floor(product.rating?.rate || product.rating) ? 'text-yellow-400' : 'text-gray-200'} />
                                     ))}
                                 </div>
-                                <span className="text-gray-900 font-bold">{product.rating}</span>
-                                <span className="text-gray-400 font-medium">({product.reviews} customer reviews)</span>
+                                <span className="text-gray-900 font-bold">{product.rating?.rate || product.rating}</span>
+                                <span className="text-gray-400 font-medium">({product.rating?.count || product.reviews} customer reviews)</span>
                             </div>
 
-                            <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight">{product.name}</h1>
+                            <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight">{product.title || product.name}</h1>
                             <p className="text-3xl font-bold text-yellow-500 mb-6">₹{product.price}</p>
 
                             <div className="h-px bg-gray-100 w-full mb-6"></div>
@@ -162,12 +162,12 @@ const ProductDetail = () => {
                     <div className="flex gap-12 mb-12 border-b border-gray-100">
                         <button className="pb-4 border-b-2 border-yellow-500 font-bold text-gray-900">Description</button>
                         <button className="pb-4 text-gray-400 font-medium hover:text-gray-600 transition-colors">Specifications</button>
-                        <button className="pb-4 text-gray-400 font-medium hover:text-gray-600 transition-colors">Reviews ({product.reviews})</button>
+                        <button className="pb-4 text-gray-400 font-medium hover:text-gray-600 transition-colors">Reviews ({product.rating?.count || product.reviews})</button>
                     </div>
 
                     <div className="prose prose-lg max-w-4xl text-gray-600 leading-relaxed">
                         <p>
-                            Experience the pinnacle of craftsmanship with the {product.name}. Every element of this product has been meticulously designed and tested to meet our rigorous standards of quality and aesthetics.
+                            Experience the pinnacle of craftsmanship with the {product.title || product.name}. Every element of this product has been meticulously designed and tested to meet our rigorous standards of quality and aesthetics.
                         </p>
                         <ul className="mt-6 space-y-2">
                             <li>Hand-selected premium materials for longevity and premium feel</li>

@@ -29,8 +29,8 @@ const Profile = () => {
     const wishlistedProducts = productsData.filter(p => Array.isArray(wishlist) && wishlist.includes(p.id));
 
     const user = {
-        name: authUser?.name || 'Yogesh Pal',
-        email: authUser?.email || 'yogesh.pal@amberarchives.com',
+        name: authUser?.name,
+        email: authUser?.email,
         memberSince: 'January 2024',
         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80',
         stats: [

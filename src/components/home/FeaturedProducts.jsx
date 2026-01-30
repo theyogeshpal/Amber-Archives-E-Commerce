@@ -17,8 +17,8 @@ const FeaturedProducts = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {featuredList.map((product) => (
                         <Link to={`/product/${product.id}`} key={product.id} className="bg-white rounded-[2rem] shadow-sm overflow-hidden hover:shadow-2xl transition duration-500 transform hover:-translate-y-2 group border border-gray-100 flex flex-col h-full">
-                            <div className="h-72 overflow-hidden relative">
-                                <img src={product.image} alt={product.name} className="w-full h-full object-cover transition duration-700 group-hover:scale-110" />
+                            <div className="h-72 overflow-hidden relative bg-white p-6">
+                                <img src={product.image} alt={product.title} className="w-full h-full object-contain transition duration-700 group-hover:scale-110" />
                                 {product.isNew && (
                                     <div className="absolute top-4 right-4 bg-yellow-400 text-gray-900 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
                                         New
@@ -27,7 +27,7 @@ const FeaturedProducts = () => {
                             </div>
                             <div className="p-8 flex flex-col flex-1">
                                 <span className="text-[10px] text-yellow-600 font-bold uppercase tracking-[0.2em] mb-3 block">{product.category}</span>
-                                <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-2 leading-tight group-hover:text-yellow-500 transition-colors">{product.name}</h3>
+                                <h3 className="text-xl font-bold text-gray-900 mb-4 line-clamp-2 leading-tight group-hover:text-yellow-500 transition-colors">{product.title}</h3>
                                 <div className="flex justify-between items-center mt-auto">
                                     <span className="text-2xl font-black text-gray-900">₹{product.price}</span>
                                     <div className="p-3 bg-gray-900 text-white rounded-2xl group-hover:bg-yellow-400 group-hover:text-gray-900 transition-all duration-300 shadow-md">

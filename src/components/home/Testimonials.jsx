@@ -14,14 +14,14 @@ const Testimonials = () => {
     ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [itemsPerSlide, setItemsPerSlide] = useState(3);
+    const [itemsVisible, setItemsVisible] = useState(3);
 
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 768) {
-                setItemsPerSlide(1);
+                setItemsVisible(1);
             } else {
-                setItemsPerSlide(3);
+                setItemsVisible(3);
             }
         };
         handleResize();
@@ -29,21 +29,19 @@ const Testimonials = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const totalSlides = Math.ceil(testimonials.length / itemsPerSlide);
-
     const nextSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
     };
 
     const prevSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + totalSlides) % totalSlides);
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
     };
 
     // Auto-slide functionality
     useEffect(() => {
         const interval = setInterval(nextSlide, 5000);
         return () => clearInterval(interval);
-    }, [totalSlides]);
+    }, [testimonials.length]);
 
     // Star rating component
     const StarRating = ({ rating }) => {
@@ -92,47 +90,52 @@ const Testimonials = () => {
                         {/* Slider Track */}
                         <div
                             className="flex transition-transform duration-700 ease-in-out"
-                            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                            style={{
+                                transform: `translateX(-${currentIndex * (100 / itemsVisible)}%)`,
+                            }}
                         >
-                            {Array.from({ length: totalSlides }).map((_, slideIndex) => (
-                                <div key={slideIndex} className="w-full flex-shrink-0 grid gap-8 px-4 py-8 grid-cols-1 md:grid-cols-3">
-                                    {testimonials.slice(slideIndex * itemsPerSlide, slideIndex * itemsPerSlide + itemsPerSlide).map((testimonial, idx) => (
-                                        <div
-                                            key={testimonial.id}
-                                            className="group bg-white/90 backdrop-blur-sm p-8 rounded-3xl shadow-xl hover:shadow-2xl relative h-full flex flex-col justify-between transform hover:-translate-y-2 transition-all duration-500 border border-yellow-100 hover:border-yellow-300"
-                                            style={{ animationDelay: `${idx * 100}ms` }}
-                                        >
-                                            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/0 to-orange-400/0 group-hover:from-yellow-400/5 group-hover:to-orange-400/5 rounded-3xl transition-all duration-500"></div>
+                            {/* We replicate the first few items at the end to allow for a seamless transition
+                                where the last item is shown alongside the first ones. */}
+                            {[...testimonials, ...testimonials.slice(0, itemsVisible)].map((testimonial, idx) => (
+                                <div
+                                    key={`${testimonial.id}-${idx}`}
+                                    className="flex-shrink-0 px-4 py-8"
+                                    style={{ width: `${100 / itemsVisible}%` }}
+                                >
+                                    <div
+                                        className="group bg-white/90 backdrop-blur-sm p-8 rounded-3xl shadow-xl hover:shadow-2xl relative h-full flex flex-col justify-between transform hover:-translate-y-2 transition-all duration-500 border border-yellow-100 hover:border-yellow-300"
+                                        style={{ animationDelay: `${idx * 100}ms` }}
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/0 to-orange-400/0 group-hover:from-yellow-400/5 group-hover:to-orange-400/5 rounded-3xl transition-all duration-500"></div>
 
-                                            <div className="relative z-10">
-                                                <div className="absolute -top-4 -left-2 text-7xl text-yellow-400/30 font-serif leading-none">"</div>
-                                                <StarRating rating={testimonial.rating} />
-                                                <p className="text-gray-700 mb-6 leading-relaxed relative z-10 font-medium">
-                                                    {testimonial.text}
-                                                </p>
+                                        <div className="relative z-10">
+                                            <div className="absolute -top-4 -left-2 text-7xl text-yellow-400/30 font-serif leading-none">"</div>
+                                            <StarRating rating={testimonial.rating} />
+                                            <p className="text-gray-700 mb-6 leading-relaxed relative z-10 font-medium">
+                                                {testimonial.text}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex items-center mt-auto relative z-10">
+                                            <div className="relative">
+                                                <img
+                                                    src={testimonial.image}
+                                                    alt={testimonial.name}
+                                                    className="w-14 h-14 rounded-full mr-4 border-2 border-yellow-400 shadow-lg ring-4 ring-yellow-100 group-hover:ring-yellow-200 transition-all duration-300"
+                                                />
+                                                <div className="absolute -bottom-1 -right-2 bg-green-500 w-4 h-4 rounded-full border-2 border-white"></div>
                                             </div>
-
-                                            <div className="flex items-center mt-auto relative z-10">
-                                                <div className="relative">
-                                                    <img
-                                                        src={testimonial.image}
-                                                        alt={testimonial.name}
-                                                        className="w-14 h-14 rounded-full mr-4 border-2 border-yellow-400 shadow-lg ring-4 ring-yellow-100 group-hover:ring-yellow-200 transition-all duration-300"
-                                                    />
-                                                    <div className="absolute -bottom-1 -right-2 bg-green-500 w-4 h-4 rounded-full border-2 border-white"></div>
-                                                </div>
-                                                <div>
-                                                    <h4 className="font-bold text-gray-900 text-lg">{testimonial.name}</h4>
-                                                    <span className="text-sm text-yellow-600 font-semibold flex items-center gap-1">
-                                                        <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                                        </svg>
-                                                        {testimonial.role}
-                                                    </span>
-                                                </div>
+                                            <div>
+                                                <h4 className="font-bold text-gray-900 text-lg">{testimonial.name}</h4>
+                                                <span className="text-sm text-yellow-600 font-semibold flex items-center gap-1">
+                                                    <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                    </svg>
+                                                    {testimonial.role}
+                                                </span>
                                             </div>
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -159,7 +162,7 @@ const Testimonials = () => {
 
                 {/* Indicators - Centered correctly using flex */}
                 <div className="flex justify-center w-full mt-12 space-x-3 pointer-events-auto">
-                    {Array.from({ length: totalSlides }).map((_, index) => (
+                    {testimonials.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => setCurrentIndex(index)}

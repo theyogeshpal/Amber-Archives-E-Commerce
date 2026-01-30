@@ -16,13 +16,39 @@ const Login = () => {
         e.preventDefault();
         setError('');
 
-        // Admin credentials check
-        if (email === 'admin@gmail.com' && password === 'admin@123') {
-            login({ name: 'Admin User', email: email });
-            navigate('/profile');
-        } else {
-            setError('Invalid email or password. Please try again.');
-        }
+        fetch('http://localhost:8081/api/customers')
+            .then((res) => res.json())
+            .then((data) => {
+                // Determine if the data is directly an array or nested in .data
+                const users = Array.isArray(data) ? data : data.data;
+
+                if (!users || !Array.isArray(users)) {
+                    setError('Unable to fetch user data. Please try again later.');
+                    return;
+                }
+
+                const foundUser = users.find(u => u.email === email && u.password === password);
+
+                if (foundUser) {
+                    login({
+                        name: foundUser.name,
+                        email: foundUser.email,
+                        role: foundUser.role || 'User',
+                        mobile: foundUser.mobile,
+                        address: foundUser.address,
+                        pincode: foundUser.pincode
+                    });
+                    navigate('/profile');
+                } else {
+                    setError('Invalid email or password. Please try again.');
+                }
+            })
+            .catch(err => {
+                console.error('Login error:', err);
+                setError('Could not connect to the server.');
+            });
+
+
     };
 
     return (

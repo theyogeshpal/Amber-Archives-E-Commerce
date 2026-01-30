@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = (userData) => {
         setIsLoggedIn(true);
-        setUser(userData || { name: 'Yogesh Pal', email: 'yogesh.pal@amberarchives.com' });
+        setUser(userData);
     };
 
     const logout = () => {

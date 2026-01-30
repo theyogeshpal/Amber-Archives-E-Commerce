@@ -23,7 +23,7 @@ const Products = () => {
         }
     }, [location.state]);
     const [sortBy, setSortBy] = useState('Featured');
-    const [priceRange, setPriceRange] = useState(1000);
+    const [priceRange, setPriceRange] = useState(100000);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { wishlist, toggleWishlist } = useWishlist();
     const { addToCart: globalAddToCart } = useCart();
@@ -34,7 +34,7 @@ const Products = () => {
 
     useEffect(() => {
         let filtered = productsData.filter(product => {
-            const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesSearch = (product.title || product.name || '').toLowerCase().includes(searchTerm.toLowerCase());
             const matchesCategory = category === 'All' || product.category === category;
             const matchesPrice = product.price <= priceRange;
             return matchesSearch && matchesCategory && matchesPrice;
@@ -45,8 +45,13 @@ const Products = () => {
         } else if (sortBy === 'Price: High to Low') {
             filtered.sort((a, b) => b.price - a.price);
         } else if (sortBy === 'Rating') {
-            filtered.sort((a, b) => b.rating - a.rating);
+            filtered.sort((a, b) => {
+                const rateA = a.rating?.rate || a.rating || 0;
+                const rateB = b.rating?.rate || b.rating || 0;
+                return rateB - rateA;
+            });
         }
+
 
         setProducts(filtered);
     }, [searchTerm, category, sortBy, priceRange]);
@@ -57,7 +62,7 @@ const Products = () => {
         e.preventDefault();
         e.stopPropagation();
         globalAddToCart(product);
-        setToastMessage(`${product.name} added to cart!`);
+        setToastMessage(`${product.title || product.name} added to cart!`);
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
     };
@@ -107,15 +112,15 @@ const Products = () => {
                                 <input
                                     type="range"
                                     min="0"
-                                    max="1000"
-                                    step="10"
+                                    max="100000"
+                                    step="100"
                                     value={priceRange}
                                     onChange={(e) => setPriceRange(parseInt(e.target.value))}
                                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-yellow-400"
                                 />
                                 <div className="flex justify-between text-xs text-gray-400 mt-2">
                                     <span>₹0</span>
-                                    <span>₹1000+</span>
+                                    <span>₹100,000+</span>
                                 </div>
                             </div>
                         </div>
@@ -177,8 +182,8 @@ const Products = () => {
                                     <input
                                         type="range"
                                         min="0"
-                                        max="1000"
-                                        step="10"
+                                        max="100000"
+                                        step="100"
                                         value={priceRange}
                                         onChange={(e) => setPriceRange(parseInt(e.target.value))}
                                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-yellow-400"
@@ -208,11 +213,11 @@ const Products = () => {
                                     </button>
 
                                     {/* Image Container */}
-                                    <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
+                                    <div className="relative aspect-[4/5] overflow-hidden bg-white p-6">
                                         <img
                                             src={product.image}
-                                            alt={product.name}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            alt={product.title || product.name}
+                                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -238,11 +243,11 @@ const Products = () => {
                                             <div className="flex text-yellow-500">
                                                 <StarIcon sx={{ fontSize: 16 }} />
                                             </div>
-                                            <span className="text-xs font-bold text-gray-900">{product.rating}</span>
-                                            <span className="text-[10px] text-gray-400">({product.reviews})</span>
+                                            <span className="text-xs font-bold text-gray-900">{product.rating?.rate || product.rating}</span>
+                                            <span className="text-[10px] text-gray-400">({product.rating?.count || product.reviews})</span>
                                         </div>
                                         <Link to={`/product/${product.id}`}>
-                                            <h3 className="font-bold text-gray-900 text-sm md:text-lg mb-2 leading-tight flex-1 line-clamp-2 hover:text-yellow-500 transition-colors">{product.name}</h3>
+                                            <h3 className="font-bold text-gray-900 text-sm md:text-lg mb-2 leading-tight flex-1 line-clamp-2 hover:text-yellow-500 transition-colors">{product.title || product.name}</h3>
                                         </Link>
                                         <div className="flex items-center justify-between mt-auto">
                                             <span className="text-lg md:text-2xl font-black text-gray-900">₹{product.price}</span>
@@ -267,7 +272,7 @@ const Products = () => {
                                 <h3 className="text-2xl font-bold text-gray-900 mb-2">No items found</h3>
                                 <p className="text-gray-500">Try adjusting your filters to find what you're looking for.</p>
                                 <button
-                                    onClick={() => { setCategory('All'); setSearchTerm(''); setPriceRange(1000); }}
+                                    onClick={() => { setCategory('All'); setSearchTerm(''); setPriceRange(100000); }}
                                     className="mt-6 px-8 py-3 bg-yellow-400 text-gray-900 font-bold rounded-full hover:bg-yellow-300 transition-all"
                                 >
                                     Reset Filters

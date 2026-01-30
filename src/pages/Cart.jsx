@@ -91,8 +91,8 @@ const Cart = () => {
                                 {cart.map((item) => (
                                     <div key={item.id} className="p-6 md:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 md:gap-8 group">
                                         {/* Image */}
-                                        <Link to={`/product/${item.id}`} className="w-full sm:w-32 h-48 sm:h-32 rounded-2xl md:rounded-3xl overflow-hidden border border-gray-100 flex-shrink-0 relative group">
-                                            <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                        <Link to={`/product/${item.id}`} className="w-full sm:w-32 h-48 sm:h-32 rounded-2xl md:rounded-3xl overflow-hidden border border-gray-100 flex-shrink-0 relative group bg-white p-4">
+                                            <img src={item.image} alt={item.title || item.name} className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110" />
                                             <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors"></div>
                                         </Link>
 
@@ -101,7 +101,7 @@ const Cart = () => {
                                             <div className="flex justify-between items-start gap-4">
                                                 <div>
                                                     <span className="text-[10px] font-black text-amber-500 uppercase tracking-[0.2em]">{item.category}</span>
-                                                    <h3 className="text-lg md:text-xl font-bold text-gray-900 hover:text-amber-600 transition-colors uppercase tracking-tight line-clamp-2 md:line-clamp-1">{item.name}</h3>
+                                                    <h3 className="text-lg md:text-xl font-bold text-gray-900 hover:text-amber-600 transition-colors uppercase tracking-tight line-clamp-2 md:line-clamp-1">{item.title || item.name}</h3>
                                                 </div>
                                                 <button
                                                     onClick={() => removeFromCart(item.id)}

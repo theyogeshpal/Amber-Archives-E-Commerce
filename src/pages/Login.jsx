@@ -16,6 +16,20 @@ const Login = () => {
         e.preventDefault();
         setError('');
 
+        // Demo Credentials Check
+        if (email === 'admin@gmail.com' && password === 'admin123') {
+            login({
+                name: 'Admin User',
+                email: 'admin@gmail.com',
+                role: 'Admin',
+                mobile: '1234567890',
+                address: 'Amber Archives HQ',
+                pincode: '462022'
+            });
+            navigate('/profile');
+            return;
+        }
+
         fetch('http://localhost:8081/api/customers')
             .then((res) => res.json())
             .then((data) => {
@@ -45,10 +59,21 @@ const Login = () => {
             })
             .catch(err => {
                 console.error('Login error:', err);
-                setError('Could not connect to the server.');
+                // Fallback for demo credentials if API is down
+                if (email === 'admin@gmail.com' && password === 'admin123') {
+                    login({
+                        name: 'Admin User',
+                        email: 'admin@gmail.com',
+                        role: 'Admin',
+                        mobile: '1234567890',
+                        address: 'Amber Archives HQ',
+                        pincode: '462022'
+                    });
+                    navigate('/profile');
+                } else {
+                    setError('Could not connect to the server. Please check if the backend is running.');
+                }
             });
-
-
     };
 
     return (
@@ -134,10 +159,12 @@ const Login = () => {
                     </form>
 
                     <div className="mt-6 text-center space-y-4">
-                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest">
+                        <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest bg-white/5 py-2 px-4 rounded-full inline-block">
+                            Sample Credentials: <span className="text-yellow-400">admin@gmail.com</span> / <span className="text-yellow-400">admin123</span>
+                        </p>
+                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest pt-2">
                             New to the archives? <Link to="/register" className="text-yellow-400 hover:underline">Request access</Link>
                         </p>
-
                     </div>
                 </div>
             </div>

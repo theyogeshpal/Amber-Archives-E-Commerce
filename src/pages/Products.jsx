@@ -6,8 +6,10 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
+import AuthPopup from '../components/AuthPopup';
 
 import { productsData } from '../data/products';
 
@@ -25,10 +27,38 @@ const Products = () => {
     const [sortBy, setSortBy] = useState('Featured');
     const [priceRange, setPriceRange] = useState(100000);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const { wishlist, toggleWishlist } = useWishlist();
+    const { wishlist, toggleWishlist: globalToggleWishlist } = useWishlist();
     const { addToCart: globalAddToCart } = useCart();
+    const { isLoggedIn } = useAuth();
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
+    const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
+    const [authPopupMessage, setAuthPopupMessage] = useState('');
+
+    const toggleWishlist = (productId) => {
+        if (!isLoggedIn) {
+            setAuthPopupMessage("Enable your wishlist by signing into your collection vault.");
+            setIsAuthPopupOpen(true);
+            return;
+        }
+        globalToggleWishlist(productId);
+    };
+
+    const addToCart = (e, product) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isLoggedIn) {
+            setAuthPopupMessage("Secure this piece in your cart by authenticating your session.");
+            setIsAuthPopupOpen(true);
+            return;
+        }
+
+        globalAddToCart(product);
+        setToastMessage(`${product.title || product.name} added to cart!`);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+    };
 
     const categories = ['All', ...new Set(productsData.map(p => p.category))];
 
@@ -52,20 +82,8 @@ const Products = () => {
             });
         }
 
-
         setProducts(filtered);
     }, [searchTerm, category, sortBy, priceRange]);
-
-    // Removed local wishlist toggle logic
-
-    const addToCart = (e, product) => {
-        e.preventDefault();
-        e.stopPropagation();
-        globalAddToCart(product);
-        setToastMessage(`${product.title || product.name} added to cart!`);
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
-    };
 
     return (
         <div className="bg-gray-50 min-h-screen">
@@ -295,6 +313,12 @@ const Products = () => {
                     </div>
                 </div>
             </div>
+
+            <AuthPopup
+                isOpen={isAuthPopupOpen}
+                onClose={() => setIsAuthPopupOpen(false)}
+                message={authPopupMessage}
+            />
         </div>
     );
 };

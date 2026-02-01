@@ -117,18 +117,23 @@ const Login = () => {
                                     {showPassword ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
                                 </button>
                             </div>
+                            <div className="flex justify-end pr-2">
+                                <Link to="/forgot-password" size="small" className="text-white/40 text-[10px] font-bold uppercase tracking-widest hover:text-yellow-400 transition-colors">
+                                    Forgot Secret?
+                                </Link>
+                            </div>
                         </div>
 
                         <button
                             type="submit"
-                            className="group w-full py-4 bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-black rounded-2xl transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-3 shadow-2xl shadow-yellow-400/20 mt-10"
+                            className="group w-full py-4 bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-black rounded-2xl transition-all duration-300 transform active:scale-[0.98] flex items-center justify-center gap-3 shadow-2xl shadow-yellow-400/20 mt-8"
                         >
                             Authorize Entry
                             <ArrowForward className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </button>
                     </form>
 
-                    <div className="mt-12 text-center space-y-4">
+                    <div className="mt-6 text-center space-y-4">
                         <p className="text-white/40 text-xs font-bold uppercase tracking-widest">
                             New to the archives? <Link to="/register" className="text-yellow-400 hover:underline">Request access</Link>
                         </p>

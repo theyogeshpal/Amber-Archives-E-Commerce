@@ -128,4 +128,13 @@
     .animate-slide-in-right {
         animation: slide-in-right 0.8s ease-out forwards;
     }
+
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 }

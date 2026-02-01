@@ -32,7 +32,7 @@ const FeaturedProducts = () => {
                                     <span className="text-2xl font-black text-gray-900">₹{product.price}</span>
                                     <div className="p-3 bg-gray-900 text-white rounded-2xl group-hover:bg-yellow-400 group-hover:text-gray-900 transition-all duration-300 shadow-md">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                         </svg>
                                     </div>
                                 </div>

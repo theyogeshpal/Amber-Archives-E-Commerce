@@ -23,6 +23,7 @@ const Navbar = () => {
         { name: 'Products', path: '/products' },
         { name: 'About Us', path: '/about' },
         { name: 'Contact Us', path: '/contact' },
+
         ...(isLoggedIn ? [{ name: 'Profile', path: '/profile' }] : []),
     ];
 
@@ -47,9 +48,21 @@ const Navbar = () => {
                     <ul className="hidden md:flex space-x-8 items-center">
                         {navLinks.map((link) => (
                             <li key={link.name}>
-                                <Link to={link.path} className="text-gray-700 hover:text-yellow-500 font-medium transition duration-300">
-                                    {link.name}
-                                </Link>
+                                <NavLink
+                                    to={link.path}
+                                    className={({ isActive }) =>
+                                        `font-bold transition-all duration-300 relative group ${isActive ? 'text-yellow-500' : 'text-gray-600 hover:text-yellow-500'
+                                        }`
+                                    }
+                                >
+                                    {({ isActive }) => (
+                                        <>
+                                            {link.name}
+                                            {/* Premium Active Indicator */}
+                                            <span className={`absolute -bottom-1.5 left-0 h-0.5 bg-yellow-400 rounded-full transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-4'}`}></span>
+                                        </>
+                                    )}
+                                </NavLink>
                             </li>
                         ))}
                     </ul>

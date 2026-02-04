@@ -19,6 +19,7 @@ import Footer from './components/Footer';
 import { WishlistProvider } from './context/WishlistContext';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import ScrollToTop from './components/ScrollToTop';
 import './App.css';
 
 const App = () => {
@@ -26,8 +27,9 @@ const App = () => {
     <AuthProvider>
       <WishlistProvider>
         <CartProvider>
+          <ScrollToTop />
           <Navbar />
-          <div className="pb-24 md:pb-0">
+          <div className="pt-16 lg:pt-18 pb-24 md:pt-17 sm:pt-16 lg:pb-0">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/register" element={<Register />} />

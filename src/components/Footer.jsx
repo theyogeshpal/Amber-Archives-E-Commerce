@@ -9,11 +9,11 @@ const Footer = () => {
     return (
         <footer className="bg-gray-100 pt-16 pb-8 border-t border-gray-200">
             <div className="container mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-center md:text-left">
                     <div>
                         <h3 className="text-2xl font-bold text-gray-900 mb-4">Amber Archives</h3>
                         <p className="text-gray-600 mb-4">Your premium online store for curated collections and timeless pieces.</p>
-                        <div className="flex space-x-4">
+                        <div className="flex space-x-4 justify-center md:justify-start">
                             {/* Social Icons Placeholder */}
                             <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-yellow-500 transition shadow-md hover:shadow-lg transform hover:-translate-y-1">
                                 <FacebookIcon fontSize="small" />

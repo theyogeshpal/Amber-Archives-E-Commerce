@@ -89,7 +89,7 @@ const Login = () => {
             </div>
 
             {/* Login Card */}
-            <div className="relative z-10 w-full max-w-[460px] px-6 animate-fade-in-up">
+            <div className="relative z-10 w-full max-w-[460px] px-6 mt-10 mb-5 md:mt-5 animate-fade-in-up">
                 <div className="bg-white/10 backdrop-blur-3xl p-10 rounded-[3rem] border border-white/20 shadow-[0_32px_120px_-15px_rgba(0,0,0,0.5)]">
                     <div className="text-center mb-10">
                         <div className="inline-block p-4 bg-yellow-400 rounded-3xl mb-6 shadow-xl shadow-yellow-400/20 transform -rotate-6">

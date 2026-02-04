@@ -19,3 +19,4 @@ fetch('https://fakestoreapi.com/products')
     .catch((err) => {
         console.log(err);
     })
+

@@ -117,7 +117,7 @@ const Navbar = ({ className = "" }) => {
 
                 {/* Mobile Navigation Overlay - Solid Background */}
                 <div className={`lg:hidden fixed inset-0 top-[70px] bg-white z-40 transition-all duration-300 ease-in-out ${isMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'}`}>
-                    <div className="container mx-auto px-6 py-8 flex flex-col h-full bg-white">
+                    <div className="container mx-auto px-6 py-8 flex flex-col bg-white">
                         <ul className="space-y-6">
                             {navLinks.map((link) => (
                                 <li key={link.name}>
@@ -140,7 +140,7 @@ const Navbar = ({ className = "" }) => {
                             ))}
                         </ul>
 
-                        <div className="mt-auto pb-24 space-y-4">
+                        <div className="mt-8 pb-10 space-y-4">
                             {!isLoggedIn ? (
                                 <>
                                     <Link

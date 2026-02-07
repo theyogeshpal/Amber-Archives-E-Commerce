@@ -7,6 +7,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import SearchIcon from '@mui/icons-material/Search';
 import AuthPopup from '../components/AuthPopup';
@@ -30,8 +31,7 @@ const Products = () => {
     const { wishlist, toggleWishlist: globalToggleWishlist } = useWishlist();
     const { addToCart: globalAddToCart } = useCart();
     const { isLoggedIn } = useAuth();
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
+    const { showNotification } = useToast();
     const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
     const [authPopupMessage, setAuthPopupMessage] = useState('');
 
@@ -55,9 +55,7 @@ const Products = () => {
         }
 
         globalAddToCart(product);
-        setToastMessage(`${product.title || product.name} added to cart!`);
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
+        showNotification(`${product.title || product.name} added to cart!`);
     };
 
     const categories = ['All', ...new Set(productsData.map(p => p.category))];
@@ -301,19 +299,6 @@ const Products = () => {
                 </div>
             </div>
 
-            {/* Custom Toast Notification */}
-            <div className={`fixed bottom-10 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 transform ${showToast ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
-                <div className="bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-4 min-w-[300px]">
-                    <div className="bg-yellow-400 p-2 rounded-lg text-gray-900">
-                        <ShoppingCartIcon fontSize="small" />
-                    </div>
-                    <div>
-                        <p className="font-bold text-sm">Added to Archive</p>
-                        <p className="text-xs text-gray-400">{toastMessage}</p>
-                    </div>
-                </div>
-            </div>
-
             <AuthPopup
                 isOpen={isAuthPopupOpen}
                 onClose={() => setIsAuthPopupOpen(false)}
@@ -324,3 +309,4 @@ const Products = () => {
 };
 
 export default Products;
+

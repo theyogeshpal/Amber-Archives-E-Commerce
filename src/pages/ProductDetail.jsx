@@ -12,6 +12,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import AuthPopup from '../components/AuthPopup';
 
 const ProductDetail = () => {
@@ -20,6 +21,7 @@ const ProductDetail = () => {
     const { toggleWishlist: globalToggleWishlist, isInWishlist } = useWishlist();
     const { addToCart: globalAddToCart } = useCart();
     const { isLoggedIn } = useAuth();
+    const { showNotification } = useToast();
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const [selectedImage, setSelectedImage] = useState('');
@@ -43,6 +45,7 @@ const ProductDetail = () => {
             return;
         }
         globalAddToCart(product, quantity);
+        showNotification(`${product.title || product.name} added to cart!`);
     };
 
     useEffect(() => {
@@ -54,6 +57,7 @@ const ProductDetail = () => {
             navigate('/products');
         }
     }, [id, navigate]);
+
 
     if (!product) return (
         <div className="min-h-screen flex items-center justify-center">
@@ -132,10 +136,10 @@ const ProductDetail = () => {
                                     <VerifiedUserIcon className="text-yellow-500" />
                                     <span className="font-medium">2-Year extended warranty included</span>
                                 </div>
-                                <div className="flex items-center gap-3 text-gray-700">
+                                <Link to="/returns" className="flex items-center gap-3 text-gray-700 hover:text-yellow-600 transition-colors cursor-pointer">
                                     <LoopIcon className="text-yellow-500" />
                                     <span className="font-medium">30-day effortless returns policy</span>
-                                </div>
+                                </Link>
                             </div>
                         </div>
 
